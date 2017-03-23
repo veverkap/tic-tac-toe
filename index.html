@@ -11,13 +11,10 @@
         height: 271px;
         width: 300px;
       }
-      img[data-owner='x'] {
-        background: url("https://cdn.rawgit.com/veverkap/tic-tac-toe/master/tic-clipart-tic-tac-toe-hi.png") -298px 0;
-      }
       .player-x {
+        
         background: url("https://cdn.rawgit.com/veverkap/tic-tac-toe/master/tic-clipart-tic-tac-toe-hi.png") -298px 0;
       }
-
       .player-o {
         background: url("https://cdn.rawgit.com/veverkap/tic-tac-toe/master/tic-clipart-tic-tac-toe-hi.png") 0px 2px;
       }      
@@ -25,12 +22,13 @@
   </head>
   <body>
   <table align="center" border="1">
-    <tr>
-      <th id="current_player" data-player="x" colspan="3">
-        <div id="current_player_name" class="bg-info">Current Player: X</div>
-        <div id="error_msg" class="bg-danger"></div>
-      </th>
-    </tr>
+    <thead>
+      <tr>
+        <th id="current_player" data-player="x" colspan="3" class="bg-warning">
+          <div id="current_player_name">Current Player: X</div>
+        </th>
+      </tr>
+    </thead>
     <tr>
       <td>
         <img id="0x0" data-x="0" data-y="0" data-player="z" src="https://cdn.rawgit.com/veverkap/tic-tac-toe/master/pixel.gif" class="player" />
@@ -64,6 +62,12 @@
         <img id="2x2" data-x="2" data-y="2" data-player="z" src="https://cdn.rawgit.com/veverkap/tic-tac-toe/master/pixel.gif" class="player" />
       </td>      
     </tr>    
+    <tfoot>
+      <tr>
+        <th colspan="3" id="error_msg">
+        </th>
+      </tr>
+    </tfoot>    
   </table>
   <br />
   <div align="center"> <button id="reset_btn" type="button" class="btn btn-primary btn-lg">RESET</button></div>
@@ -81,11 +85,14 @@
     }
 
     TicTacToe.prototype.is_match = function(first_coords, second_coords, third_coords) {
-      var first  = $("img[data-x=" +  first_coords[0] + "][data-y=" +  first_coords[1] + "]").data("player");
-      var second = $("img[data-x=" + second_coords[0] + "][data-y=" + second_coords[1] + "]").data("player");
-      var third  = $("img[data-x=" +  third_coords[0] + "][data-y=" +  third_coords[1] + "]").data("player");
-      if ((first != "z") && (first == second) && (second == third)) {
-        window.game.winner = first;
+      var first  = $("img[data-x=" +  first_coords[0] + "][data-y=" +  first_coords[1] + "]");
+      var second = $("img[data-x=" + second_coords[0] + "][data-y=" + second_coords[1] + "]");
+      var third  = $("img[data-x=" +  third_coords[0] + "][data-y=" +  third_coords[1] + "]");
+      if ((first.data("player") != "z") && (first.data("player") == second.data("player")) && (second.data("player") == third.data("player"))) {
+        window.game.winner = first.data("player");
+        first.parent().addClass("bg-success");
+        second.parent().addClass("bg-success");
+        third.parent().addClass("bg-success");
         return true;
       }
       return false;      
@@ -144,15 +151,15 @@
 
     TicTacToe.prototype.can_move = function(coordinate_owner, player) {
       if (coordinate_owner === "z") {
-        $("#error_msg").html("");
+        $("#error_msg").html("").removeClass("bg-danger");
         return true;
       }
       if (player != coordinate_owner) {
-        $("#error_msg").html("The other player owns this, you can't have it!");
+        $("#error_msg").html("The other player owns this, you can't have it!").addClass("bg-danger");
         return false;
       }      
       if (player == coordinate_owner) {
-        $("#error_msg").html("You already chose this one!");
+        $("#error_msg").html("You already chose this one!").addClass("bg-danger");
         return false;
       }
     }
@@ -168,17 +175,22 @@
 
       if (window.game.can_move(coordinate_owner, player)) {
         $(e.target).data("player", player).addClass("player-" + player);
+        $(e.target).parent().addClass("parent-player-" + player);
         window.game.toggle_player();
       }
 
       if (window.game.is_game_over()) {
         window.game.game_over = true;
-        var msg = "GAME OVER, NO ONE WINS";
-        if (window.game.winner != "z") {
-          var msg = "GAME OVER, PLAYER " + window.game.winner.toUpperCase() + " WINS";
+        var msg = "";
+        if (window.game.winner == "z") {
+          msg = "GAME OVER, NO ONE WINS";
+          $("#error_msg").addClass("bg-danger");
+        } else {
+          msg = "GAME OVER, PLAYER " + window.game.winner.toUpperCase() + " WINS";
+          $("#error_msg").addClass("bg-success");
         }
+        $("#current_player_name").html("GAME OVER");
         $("#error_msg").html(msg);
-        setTimeout(function(){ alert(msg); }, 100);
       }
       e.preventDefault();
       return true;
