@@ -8,6 +8,7 @@ TicTacToe = (function() {
     var first  = $("img[data-x=" +  first_coords[0] + "][data-y=" +  first_coords[1] + "]");
     var second = $("img[data-x=" + second_coords[0] + "][data-y=" + second_coords[1] + "]");
     var third  = $("img[data-x=" +  third_coords[0] + "][data-y=" +  third_coords[1] + "]");
+    
     if ((first.data("player") != "z") && (first.data("player") == second.data("player")) && (second.data("player") == third.data("player"))) {
       window.game.winner = first.data("player");
       first.parent().addClass("bg-success");

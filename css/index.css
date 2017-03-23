@@ -1,0 +1,16 @@
+th {
+  height: 100px;
+  font-size: 28px;
+  text-align: center;
+}
+.player {
+  height: 271px;
+  width: 300px;
+}
+.player-x {
+  
+  background: url("../images/tic-clipart-tic-tac-toe-hi.png") -298px 0;
+}
+.player-o {
+  background: url("../images/tic-clipart-tic-tac-toe-hi.png") 0px 2px;
+} 
