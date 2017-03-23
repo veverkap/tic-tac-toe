@@ -60,7 +60,7 @@
   <script type="text/javascript">
     $(function() {
       window.game = new TicTacToe(); // From js/index.js
-      $("img.player").on("click", window.game.move);
+      $("img.player").on("click", window.game.mark_cell);
       $("#reset_btn").on("click", function() { window.location.reload(); });
     });
   </script>
